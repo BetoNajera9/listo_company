@@ -5,27 +5,19 @@ import { DatabaseService } from '../database/database.service'
 import { CreateCompany, UpdateCompany } from './dto/input'
 
 @Injectable()
-export class CompaniesRepository {
+export class CompaniesController {
 	constructor(private database: DatabaseService) {}
 
 	async getAllCompanies(): Promise<Company[]> {
-		try {
-			const res = await this.database.company.findMany()
-
-			return res
-		} catch (error) {
-			console.error(error)
-		}
+		return await this.database.company.findMany()
 	}
 
-	async getCompany(id: string): Promise<Company> {
-		return await this.database.company.findUnique({ where: { id } })
+	async getCompanies(query: any): Promise<Company[]> {
+		return await this.database.company.findMany({ where: query })
 	}
 
 	async createCompany(data: CreateCompany) {
-		const res = await this.database.company.create({ data })
-
-		return res
+		return await this.database.company.create({ data })
 	}
 
 	async updateCompany(id: string, data: UpdateCompany) {

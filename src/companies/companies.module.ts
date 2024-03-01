@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common'
 
 import { DatabaseModule } from '../database/database.module'
 
-import { CompaniesRepository } from './companies.repository'
+import { CompaniesController } from './companies.controller'
 import { CompaniesResolver } from './companies.resolver'
 import { CompaniesService } from './companies.service'
 
 @Module({
 	imports: [DatabaseModule],
-	providers: [CompaniesResolver, CompaniesService, CompaniesRepository],
+	providers: [CompaniesResolver, CompaniesService, CompaniesController],
 })
 export class CompaniesModule {}
