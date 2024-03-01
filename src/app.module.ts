@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 
+import { CompaniesModule } from './companies/companies.module'
 import { DatabaseModule } from './database/database.module'
 
 import Config from './app.config'
@@ -8,6 +9,7 @@ import Config from './app.config'
 	imports: [
 		Config.ConfigModule,
 		Config.GraphQLModule,
+		CompaniesModule,
 		DatabaseModule,
 	],
 	providers: [],
