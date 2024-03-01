@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  fiscalSituation     String
+  address             Address
+  name                String    @unique
+  bylaws              Bylaws
+  reatedAt            DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+type Bylaws {
+  typeOfPartnership   String
+  corporatePurpose    String
+  duration            Int
+  administratorName   String
+  statutoryAuditors   String
+}
+
+type Address {
+  street              String
+  city                String
+  state               String
+  zip                 String
+}
