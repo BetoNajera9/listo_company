@@ -13,7 +13,7 @@ model Company {
   address             Address
   name                String    @unique
   bylaws              Bylaws
-  reatedAt            DateTime  @default(now())
+  createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 }
 
