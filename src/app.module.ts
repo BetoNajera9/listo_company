@@ -14,4 +14,4 @@ import Config from './app.config'
 	],
 	providers: [],
 })
-export class AppModule { }
+export class AppModule {}
