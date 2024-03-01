@@ -1,33 +1,140 @@
 import { Injectable } from '@nestjs/common'
-import { Company } from '@prisma/client'
 
-import { CompaniesRepository } from './companies.repository'
+import { CompaniesController } from './companies.controller'
+import { CompaniesError, CompaniesResponse } from './enums'
 import { CreateCompany, UpdateCompany } from './dto/input'
+import { ServiceResponse } from '../common/classes'
+import { StatusCode } from '../common/enums'
+import { StatusResponse } from './models'
 
 @Injectable()
 export class CompaniesService {
-	constructor(private repository: CompaniesRepository) {}
+	private serviceResponse: ServiceResponse
 
-	public async getAllCompanies(): Promise<Company[]> {
-		return await this.repository.getAllCompanies()
+	constructor(private controller: CompaniesController) {
+		this.serviceResponse = new ServiceResponse(
+			CompaniesResponse,
+			CompaniesError
+		)
 	}
 
-	public async getCompany(id: string): Promise<Company> {
-		return await this.repository.getCompany(id)
+	public async getAllCompanies(): Promise<StatusResponse> {
+		try {
+			const response = await this.controller.getAllCompanies()
+
+			if (!response.length)
+				this.serviceResponse.handlerResponse(
+					false,
+					CompaniesResponse.NO_DATA_FOUND
+				)
+
+			return this.serviceResponse.handlerResponse(
+				true,
+				CompaniesResponse.SEARCH,
+				response
+			)
+		} catch (error) {
+			this.serviceResponse.handlerError(
+				CompaniesError.SEARCH,
+				StatusCode.INTERNAL_SERVER,
+				error
+			)
+		}
 	}
 
-	public async creatCompany(data: CreateCompany): Promise<Company> {
-		return await this.repository.createCompany(data)
+	public async getCompany(id: string): Promise<StatusResponse> {
+		try {
+			const response = await this.controller.getCompanies({ id })
+
+			if (!response.length)
+				return this.serviceResponse.handlerResponse(
+					false,
+					CompaniesResponse.NO_DATA_FOUND
+				)
+
+			return this.serviceResponse.handlerResponse(
+				true,
+				CompaniesResponse.SEARCH,
+				response
+			)
+		} catch (error) {
+			this.serviceResponse.handlerError(
+				CompaniesError.SEARCH,
+				StatusCode.INTERNAL_SERVER,
+				error
+			)
+		}
+	}
+
+	public async creatCompany(data: CreateCompany): Promise<StatusResponse> {
+		try {
+			const find = await this.controller.getCompanies({ name: data.name })
+
+			if (find.length > 0)
+				return this.serviceResponse.handlerResponse(
+					false,
+					CompaniesResponse.NAME_EXISTS
+				)
+
+			await this.controller.createCompany(data)
+
+			return this.serviceResponse.handlerResponse(
+				true,
+				CompaniesResponse.CREATE
+			)
+		} catch (error) {
+			this.serviceResponse.handlerError(
+				CompaniesError.CREATE,
+				StatusCode.INTERNAL_SERVER,
+				error
+			)
+		}
 	}
 
 	public async updateCompany(
 		id: string,
 		data: UpdateCompany
-	): Promise<Company> {
-		return await this.repository.updateCompany(id, data)
+	): Promise<StatusResponse> {
+		try {
+			if (data.hasOwnProperty('name')) {
+				const find = await this.controller.getCompanies({ name: data.name })
+
+				if (find.length > 0)
+					return this.serviceResponse.handlerResponse(
+						false,
+						CompaniesResponse.NAME_EXISTS
+					)
+			}
+
+			await this.controller.updateCompany(id, data)
+
+			return this.serviceResponse.handlerResponse(
+				true,
+				CompaniesResponse.UPDATE
+			)
+		} catch (error) {
+			this.serviceResponse.handlerError(
+				CompaniesError.UPDATE,
+				StatusCode.INTERNAL_SERVER,
+				error
+			)
+		}
 	}
 
-	public async removeCompany(id: string) {
-		return await this.repository.removeCompany(id)
+	public async removeCompany(id: string): Promise<StatusResponse> {
+		try {
+			await this.controller.removeCompany(id)
+
+			return this.serviceResponse.handlerResponse(
+				true,
+				CompaniesResponse.REMOVE
+			)
+		} catch (error) {
+			this.serviceResponse.handlerError(
+				CompaniesError.REMOVE,
+				StatusCode.INTERNAL_SERVER,
+				error
+			)
+		}
 	}
 }
