@@ -11,6 +11,13 @@ export class ServiceResponse {
 		this.serviceError = errors || {}
 	}
 
+	/**
+	 * Function to generate and return a response
+	 * @param success A boolean representing the status of response
+	 * @param messageResponse A string representing the response text
+	 * @param data All the data to return
+	 * @returns An object of type StatusResponse
+	 */
 	handlerResponse(
 		success: boolean,
 		messageResponse: string,
@@ -21,19 +28,25 @@ export class ServiceResponse {
 
 		return !code
 			? {
-					success,
-					code: 'UNDEFINED_RESPONSE',
-					message: messageResponse,
-					data,
-			  }
+				success,
+				code: 'UNDEFINED_RESPONSE',
+				message: messageResponse,
+				data,
+			}
 			: {
-					success,
-					code,
-					message: messageResponse,
-					data,
-			  }
+				success,
+				code,
+				message: messageResponse,
+				data,
+			}
 	}
 
+	/**
+	 * Function to generate and throw a CustomGraphQLError instance
+	 * @param messageError A string representing the error text
+	 * @param status A string representing the status code of the error
+	 * @param originalError An error that is the original error
+	 */
 	handlerError(
 		messageError: string,
 		status: StatusCode,
@@ -44,15 +57,15 @@ export class ServiceResponse {
 
 		let error = !code
 			? {
-					code: 'UNDEFINED_ERROR',
-					message: messageError,
-			  }
+				code: 'UNDEFINED_ERROR',
+				message: messageError,
+			}
 			: {
-					code,
-					status,
-					originalError,
-					message: messageError,
-			  }
+				code,
+				status,
+				originalError,
+				message: messageError,
+			}
 
 		throw new ServiceError(error)
 	}

@@ -18,6 +18,10 @@ export class CompaniesService {
 		)
 	}
 
+	/**
+	 * Function to return a response with all companies
+	 * @returns An object of type StatusResponse
+	 */
 	public async getAllCompanies(): Promise<StatusResponse> {
 		try {
 			const response = await this.controller.getAllCompanies()
@@ -42,6 +46,11 @@ export class CompaniesService {
 		}
 	}
 
+	/**
+	 * Function to return the company with specific id
+	 * @param id A string
+	 * @returns An object of type StatusResponse
+	 */
 	public async getCompany(id: string): Promise<StatusResponse> {
 		try {
 			const response = await this.controller.getCompanies({ id })
@@ -66,6 +75,11 @@ export class CompaniesService {
 		}
 	}
 
+	/**
+	 * Function to create a company
+	 * @param data all company information
+	 * @returns An object of type StatusResponse
+	 */
 	public async creatCompany(data: CreateCompany): Promise<StatusResponse> {
 		try {
 			const find = await this.controller.getCompanies({ name: data.name })
@@ -91,6 +105,12 @@ export class CompaniesService {
 		}
 	}
 
+	/**
+	 * Function to update a company
+	 * @param id A string
+	 * @param data Company information to be changed
+	 * @returns An object of type StatusResponse
+	 */
 	public async updateCompany(
 		id: string,
 		data: UpdateCompany
@@ -121,6 +141,11 @@ export class CompaniesService {
 		}
 	}
 
+	/**
+	 * Function to delete a company
+	 * @param id A string
+	 * @returns An object of type StatusResponse
+	 */
 	public async removeCompany(id: string): Promise<StatusResponse> {
 		try {
 			await this.controller.removeCompany(id)
